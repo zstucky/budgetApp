@@ -15,7 +15,21 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        total.text = "$0.00"
+        total.text = UserDefaults.standard.string(forKey: "BALANCE") ?? "0.00"
+        var color = total.text!.split(separator: "$").last
+        var colorNum = Double(color!)!
+        if colorNum > 0
+        {
+            total.textColor = .green
+        }
+        else if colorNum < 0
+        {
+            total.textColor = .red
+        }
+        else
+        {
+            total.textColor = .white
+        }
     }
 
     @IBAction func addIncome(_ sender: Any) {
@@ -24,6 +38,7 @@ class ViewController: UIViewController {
         if let cost = Double(number.text!) {
             let newTotal = old + cost
             total.text = "$\(String(format: "%.2f", newTotal))"
+            UserDefaults.standard.set(total.text, forKey: "BALANCE")
             if newTotal > 0
             {
                 total.textColor = .green
@@ -49,6 +64,7 @@ class ViewController: UIViewController {
         if let cost = Double(number.text!) {
             let newTotal = old - cost
             total.text = "$\(String(format: "%.2f", newTotal))"
+            UserDefaults.standard.set(total.text, forKey: "BALANCE")
             if newTotal > 0
             {
                 total.textColor = .green
