@@ -16,8 +16,8 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         total.text = UserDefaults.standard.string(forKey: "BALANCE") ?? "0.00"
-        var color = total.text!.split(separator: "$").last
-        var colorNum = Double(color!)!
+        let color = total.text!.split(separator: "$").last
+        let colorNum = Double(color!)!
         if colorNum > 0
         {
             total.textColor = .green
@@ -82,6 +82,12 @@ class ViewController: UIViewController {
         else {
             number.text = "error"
         }
+    }
+    
+    @IBAction func resetTotal(_ sender: Any) {
+        total.text = "0.00"
+        total.textColor = .white
+        UserDefaults.standard.set(total.text, forKey: "BALANCE")
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
