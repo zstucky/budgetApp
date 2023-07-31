@@ -7,10 +7,13 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class MainScreen: UIViewController {
     
     @IBOutlet weak var total: UILabel!
     @IBOutlet weak var number: UITextField!
+    @IBOutlet weak var note: UITextField!
+    
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,7 +33,17 @@ class ViewController: UIViewController {
         {
             total.textColor = .white
         }
+        //fetchLogs()
     }
+    
+    /*func fetchLogs() {
+        do {
+            print(try context.fetch(Transactions.fetchRequest()))
+        }
+        catch {
+            
+        }
+    }*/
 
     @IBAction func addIncome(_ sender: Any) {
         let oldString = total.text!.split(separator: "$").last
@@ -51,6 +64,14 @@ class ViewController: UIViewController {
             {
                 total.textColor = .white
             }
+            
+            /*let newTransaction = Transactions(context: context)
+            newTransaction.amount = number.text
+            newTransaction.note = note.text
+            
+            try! context.save()
+            fetchLogs()*/
+            
             number.text = ""
         }
         else {
