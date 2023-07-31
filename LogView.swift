@@ -11,42 +11,59 @@ class LogView: UIViewController {
     
     @IBOutlet weak var logList: UITableView!
 
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+
+    var logs:[Transactions]?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         logList.delegate = self
         logList.dataSource = self
-
-        // Do any additional setup after loading the view.
+        fetchLogs()
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    func fetchLogs() {
+        do {
+            self.logs = try context.fetch(Transactions.fetchRequest())
+            DispatchQueue.main.async {
+                self.logList.reloadData()
+            }
+        }
+        catch {
+            
+        }
     }
-    */
-
+    
+    @IBAction func resetLogs(_ sender: Any) {
+        
+        if (logs!.count > 0) {
+            let logToRemove = self.logs![0]
+            
+            self.context.delete(logToRemove)
+            
+            try! self.context.save()
+            
+            self.fetchLogs()
+        }
+    }
 }
 
 extension LogView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("you tapped me")
+        
     }
 }
 
 extension LogView: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        return logs?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = "Hello World"
+        let Transactions = self.logs![indexPath.row]
+        cell.textLabel?.text = "\(Transactions.amount ?? "") \(Transactions.note ?? "no note")"
         return cell
     }
 }

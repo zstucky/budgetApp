@@ -33,18 +33,8 @@ class MainScreen: UIViewController {
         {
             total.textColor = .white
         }
-        //fetchLogs()
     }
     
-    /*func fetchLogs() {
-        do {
-            print(try context.fetch(Transactions.fetchRequest()))
-        }
-        catch {
-            
-        }
-    }*/
-
     @IBAction func addIncome(_ sender: Any) {
         let oldString = total.text!.split(separator: "$").last
         let old = Double(oldString!)!
@@ -65,14 +55,14 @@ class MainScreen: UIViewController {
                 total.textColor = .white
             }
             
-            /*let newTransaction = Transactions(context: context)
-            newTransaction.amount = number.text
+            let newTransaction = Transactions(context: self.context)
+            newTransaction.amount = "In: $\(number.text ?? "")"
             newTransaction.note = note.text
             
-            try! context.save()
-            fetchLogs()*/
+            try! self.context.save()
             
             number.text = ""
+            note.text = ""
         }
         else {
             number.text = "error"
@@ -98,7 +88,15 @@ class MainScreen: UIViewController {
             {
                 total.textColor = .white
             }
+            
+            let newTransaction = Transactions(context: self.context)
+            newTransaction.amount = "Ex: $\(number.text ?? "")"
+            newTransaction.note = note.text
+            
+            try! self.context.save()
+            
             number.text = ""
+            note.text = ""
         }
         else {
             number.text = "error"
@@ -114,5 +112,5 @@ class MainScreen: UIViewController {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         number.resignFirstResponder()
     }
+    
 }
-
