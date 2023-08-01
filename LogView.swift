@@ -35,15 +35,21 @@ class LogView: UIViewController {
         }
     }
     
-    @IBAction func resetLogs(_ sender: Any) {
+    @IBAction func deleteLastLog(_ sender: Any) {
         
         if (logs!.count > 0) {
-            let logToRemove = self.logs![0]
-            
+            let logToRemove = self.logs![logs!.count - 1]
             self.context.delete(logToRemove)
-            
             try! self.context.save()
-            
+            self.fetchLogs()
+        }
+    }
+    
+    @IBAction func deleteAllLogs(_ sender: Any) {
+        while (logs!.count != 0) {
+            let logToRemove = self.logs![0]
+            self.context.delete(logToRemove)
+            try! self.context.save()
             self.fetchLogs()
         }
     }
@@ -63,7 +69,8 @@ extension LogView: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         let Transactions = self.logs![indexPath.row]
-        cell.textLabel?.text = "\(Transactions.amount ?? "") \(Transactions.note ?? "no note")"
+        cell.textLabel?.text = "$\(Transactions.amount ?? "") \(Transactions.note ?? "no note")"
+        cell.textLabel?.textColor = .red
         return cell
     }
 }

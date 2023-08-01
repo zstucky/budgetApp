@@ -18,7 +18,7 @@ class MainScreen: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        total.text = UserDefaults.standard.string(forKey: "BALANCE") ?? "0.00"
+        total.text = UserDefaults.standard.string(forKey: "BALANCE") ?? "$0.00"
         let color = total.text!.split(separator: "$").last
         let colorNum = Double(color!)!
         if colorNum > 0
@@ -54,13 +54,6 @@ class MainScreen: UIViewController {
             {
                 total.textColor = .white
             }
-            
-            let newTransaction = Transactions(context: self.context)
-            newTransaction.amount = "In: $\(number.text ?? "")"
-            newTransaction.note = note.text
-            
-            try! self.context.save()
-            
             number.text = ""
             note.text = ""
         }
@@ -90,7 +83,7 @@ class MainScreen: UIViewController {
             }
             
             let newTransaction = Transactions(context: self.context)
-            newTransaction.amount = "Ex: $\(number.text ?? "")"
+            newTransaction.amount = number.text
             newTransaction.note = note.text
             
             try! self.context.save()
@@ -104,7 +97,7 @@ class MainScreen: UIViewController {
     }
     
     @IBAction func resetTotal(_ sender: Any) {
-        total.text = "0.00"
+        total.text = "$0.00"
         total.textColor = .white
         UserDefaults.standard.set(total.text, forKey: "BALANCE")
     }
