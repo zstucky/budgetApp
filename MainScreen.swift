@@ -5,6 +5,7 @@
 //  Created by Zach Stucky on 7/26/23.
 //
 
+import WidgetKit
 import UIKit
 
 class MainScreen: UIViewController {
@@ -56,6 +57,13 @@ class MainScreen: UIViewController {
             }
             number.text = ""
             note.text = ""
+            
+            let userDefaultsShared = UserDefaults(suiteName: "group.thereisnowaythisistaken4532")
+            guard let text = total.text, !text.isEmpty else {
+                return
+            }
+            userDefaultsShared?.setValue(text, forKey: "TEXT")
+            WidgetCenter.shared.reloadAllTimelines()
         }
         else {
             number.text = "error"
@@ -90,6 +98,13 @@ class MainScreen: UIViewController {
             
             number.text = ""
             note.text = ""
+            
+            let userDefaultsShared = UserDefaults(suiteName: "group.thereisnowaythisistaken4532")
+            guard let text = total.text, !text.isEmpty else {
+                return
+            }
+            userDefaultsShared?.setValue(text, forKey: "TEXT")
+            WidgetCenter.shared.reloadAllTimelines()
         }
         else {
             number.text = "error"
@@ -100,6 +115,13 @@ class MainScreen: UIViewController {
         total.text = "$0.00"
         total.textColor = .white
         UserDefaults.standard.set(total.text, forKey: "BALANCE")
+        
+        let userDefaultsShared = UserDefaults(suiteName: "group.thereisnowaythisistaken4532")
+        guard let text = total.text, !text.isEmpty else {
+            return
+        }
+        userDefaultsShared?.setValue(text, forKey: "TEXT")
+        WidgetCenter.shared.reloadAllTimelines()
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
