@@ -35,6 +35,7 @@ class LogView: UIViewController {
         }
     }
     
+    /*
     @IBAction func deleteLastLog(_ sender: Any) {
         
         if (logs!.count > 0) {
@@ -44,6 +45,7 @@ class LogView: UIViewController {
             self.fetchLogs()
         }
     }
+     */
     
     @IBAction func deleteAllLogs(_ sender: Any) {
         while (logs!.count != 0) {
@@ -53,7 +55,26 @@ class LogView: UIViewController {
             self.fetchLogs()
         }
     }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        // Create swipe action
+        let action = UIContextualAction(style: .destructive, title: "Delete") { (action, view, completionHandler) in
+            
+            let logToRemove = self.logs![indexPath.row]
+            
+            self.context.delete(logToRemove)
+            
+            do {
+                try self.context.save()
+            }
+            catch {
+            }
+            self.fetchLogs( )
+        }
+        return UISwipeActionsConfiguration (actions: [action])
+    }
 }
+
 
 extension LogView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
