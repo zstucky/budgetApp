@@ -13,8 +13,9 @@ class MainScreen: UIViewController {
     @IBOutlet weak var total: UILabel!
     @IBOutlet weak var number: UITextField!
     @IBOutlet weak var note: UITextField!
-    @IBOutlet weak var type: UITextField!
     @IBOutlet weak var secondary: UILabel!
+    @IBOutlet weak var specialSwitch: UISwitch!
+    
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
@@ -58,11 +59,45 @@ class MainScreen: UIViewController {
         }
     }
     
+    
     @IBAction func addIncome(_ sender: Any) {
-        
+        //refund
+        if specialSwitch.isOn {
+            let oldString = total.text!.split(separator: "$").last
+            let old = Double(oldString!)!
+            if let cost = Double(number.text!) {
+                let newTotal = old + cost
+                total.text = "$\(String(format: "%.2f", newTotal))"
+                UserDefaults.standard.set(total.text, forKey: "BALANCE")
+                if newTotal > 0
+                {
+                    total.textColor = .green
+                }
+                else if newTotal < 0
+                {
+                    total.textColor = .red
+                }
+                else
+                {
+                    total.textColor = .white
+                }
+                number.text = ""
+                note.text = ""
+                
+                //for the widget
+                let userDefaultsShared = UserDefaults(suiteName: "group.thereisnowaythisistaken4532")
+                guard let text = total.text, !text.isEmpty else {
+                    return
+                }
+                userDefaultsShared?.setValue(text, forKey: "TEXT")
+                WidgetCenter.shared.reloadAllTimelines()
+            }
+            else {
+                number.text = "error"
+            }
+        }
         //income
-        if type.text == "income" {
-            
+        else{
             let oldString = total.text!.split(separator: "$").last
             let old = Double(oldString!)!
             if let cost = Double(number.text!) {
@@ -72,7 +107,7 @@ class MainScreen: UIViewController {
                 
                 let oldStringSecondary = secondary.text!.split(separator: "$").last
                 let oldSecondary = Double(oldStringSecondary!)!
-                let newTotalSecondary = oldSecondary + (0.25*cost)
+                let newTotalSecondary = oldSecondary + (0.15*cost)
                 secondary.text = "$\(String(format: "%.2f", newTotalSecondary))"
                 UserDefaults.standard.set(secondary.text, forKey: "GIWINTG")
                     
@@ -104,7 +139,6 @@ class MainScreen: UIViewController {
                 
                 number.text = ""
                 note.text = ""
-                type.text = ""
                     
                 //for the widget
                 let userDefaultsShared = UserDefaults(suiteName: "group.thereisnowaythisistaken4532")
@@ -117,49 +151,12 @@ class MainScreen: UIViewController {
             else {
                 number.text = "error"
             }
-                
         }
-            
-        //refund
-        else if type.text == "refund" {
-            
-            let oldString = total.text!.split(separator: "$").last
-            let old = Double(oldString!)!
-            if let cost = Double(number.text!) {
-                let newTotal = old + cost
-                total.text = "$\(String(format: "%.2f", newTotal))"
-                UserDefaults.standard.set(total.text, forKey: "BALANCE")
-                if newTotal > 0
-                {
-                    total.textColor = .green
-                }
-                else if newTotal < 0
-                {
-                    total.textColor = .red
-                }
-                else
-                {
-                    total.textColor = .white
-                }
-                number.text = ""
-                note.text = ""
-                type.text = ""
-                
-                //for the widget
-                let userDefaultsShared = UserDefaults(suiteName: "group.thereisnowaythisistaken4532")
-                guard let text = total.text, !text.isEmpty else {
-                    return
-                }
-                userDefaultsShared?.setValue(text, forKey: "TEXT")
-                WidgetCenter.shared.reloadAllTimelines()
-            }
-            else {
-                number.text = "error"
-            }
-                
-        }
-            
-        else if type.text == "others" {
+    }
+    
+    @IBAction func subExpense(_ sender: Any) {
+        //GIWINTG
+        if specialSwitch.isOn {
             let oldString = secondary.text!.split(separator: "$").last
             let old = Double(oldString!)!
             if let cost = Double(number.text!) {
@@ -181,7 +178,6 @@ class MainScreen: UIViewController {
                 
                 number.text = ""
                 note.text = ""
-                type.text = ""
                 
                 //for widget
                 let userDefaultsShared = UserDefaults(suiteName: "group.thereisnowaythisistaken4532")
@@ -225,7 +221,6 @@ class MainScreen: UIViewController {
                 
                 number.text = ""
                 note.text = ""
-                type.text = ""
                 
                 let userDefaultsShared = UserDefaults(suiteName: "group.thereisnowaythisistaken4532")
                 guard let text = total.text, !text.isEmpty else {
@@ -239,6 +234,14 @@ class MainScreen: UIViewController {
             }
         }
     }
+    
+    
+    
+    @IBAction func switchPressed(_ sender: Any) {
+    }
+    
+    
+    
     
     @IBAction func resetTotal(_ sender: Any) {
         total.text = "$0.00"
@@ -261,7 +264,6 @@ class MainScreen: UIViewController {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         number.resignFirstResponder()
         note.resignFirstResponder()
-        type.resignFirstResponder()
     }
     
 }
