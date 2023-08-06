@@ -23,6 +23,7 @@ class LogView: UIViewController {
         fetchLogs()
     }
     
+    //fetches all Transaction data
     func fetchLogs() {
         do {
             self.logs = try context.fetch(Transactions.fetchRequest())
@@ -35,19 +36,9 @@ class LogView: UIViewController {
         }
     }
     
-    /*
-    @IBAction func deleteLastLog(_ sender: Any) {
-        
-        if (logs!.count > 0) {
-            let logToRemove = self.logs![logs!.count - 1]
-            self.context.delete(logToRemove)
-            try! self.context.save()
-            self.fetchLogs()
-        }
-    }
-     */
-    
+    //TO-DO: Add a warning pop-up for this
     @IBAction func deleteAllLogs(_ sender: Any) {
+        //loops until all logs are deleted
         while (logs!.count != 0) {
             let logToRemove = self.logs![0]
             self.context.delete(logToRemove)
@@ -56,8 +47,8 @@ class LogView: UIViewController {
         }
     }
     
+    //swipe to delete function
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        // Create swipe action
         let action = UIContextualAction(style: .destructive, title: "Delete") { (action, view, completionHandler) in
             
             let logToRemove = self.logs![indexPath.row]
@@ -91,7 +82,22 @@ extension LogView: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         let Transactions = self.logs![indexPath.row]
         cell.textLabel?.text = "$\(Transactions.amount ?? "") \(Transactions.note ?? "no note")"
-        cell.textLabel?.textColor = .red
+        if Transactions.type == "refund" {
+            cell.textLabel?.textColor = .cyan
+        }
+        else if Transactions.type == "income" {
+            cell.textLabel?.textColor = .green
+        }
+        else if Transactions.type == "GIWINTG" {
+            cell.textLabel?.textColor = .yellow
+        }
+        else if Transactions.type == "expense" {
+            cell.textLabel?.textColor = .red
+        }
+        else {
+            cell.textLabel?.textColor = .gray
+        }
+
         return cell
     }
 }
