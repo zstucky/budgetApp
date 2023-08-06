@@ -16,7 +16,6 @@ class MainScreen: UIViewController {
     @IBOutlet weak var secondary: UILabel!
     @IBOutlet weak var specialSwitch: UISwitch!
     
-    
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     override func viewDidLoad() {
@@ -90,6 +89,10 @@ class MainScreen: UIViewController {
                     return
                 }
                 userDefaultsShared?.setValue(text, forKey: "TEXT")
+                guard let textSecondary = secondary.text, !textSecondary.isEmpty else {
+                    return
+                }
+                userDefaultsShared?.setValue(textSecondary, forKey: "SECONDARY")
                 WidgetCenter.shared.reloadAllTimelines()
             }
             else {
@@ -146,6 +149,10 @@ class MainScreen: UIViewController {
                     return
                 }
                 userDefaultsShared?.setValue(text, forKey: "TEXT")
+                guard let textSecondary = secondary.text, !textSecondary.isEmpty else {
+                    return
+                }
+                userDefaultsShared?.setValue(textSecondary, forKey: "SECONDARY")
                 WidgetCenter.shared.reloadAllTimelines()
             }
             else {
@@ -179,12 +186,16 @@ class MainScreen: UIViewController {
                 number.text = ""
                 note.text = ""
                 
-                //for widget
+                //for the widget
                 let userDefaultsShared = UserDefaults(suiteName: "group.thereisnowaythisistaken4532")
                 guard let text = total.text, !text.isEmpty else {
                     return
                 }
                 userDefaultsShared?.setValue(text, forKey: "TEXT")
+                guard let textSecondary = secondary.text, !textSecondary.isEmpty else {
+                    return
+                }
+                userDefaultsShared?.setValue(textSecondary, forKey: "SECONDARY")
                 WidgetCenter.shared.reloadAllTimelines()
             }
             else {
@@ -222,11 +233,16 @@ class MainScreen: UIViewController {
                 number.text = ""
                 note.text = ""
                 
+                //for the widget
                 let userDefaultsShared = UserDefaults(suiteName: "group.thereisnowaythisistaken4532")
                 guard let text = total.text, !text.isEmpty else {
                     return
                 }
                 userDefaultsShared?.setValue(text, forKey: "TEXT")
+                guard let textSecondary = secondary.text, !textSecondary.isEmpty else {
+                    return
+                }
+                userDefaultsShared?.setValue(textSecondary, forKey: "SECONDARY")
                 WidgetCenter.shared.reloadAllTimelines()
             }
             else {
@@ -234,14 +250,6 @@ class MainScreen: UIViewController {
             }
         }
     }
-    
-    
-    
-    @IBAction func switchPressed(_ sender: Any) {
-    }
-    
-    
-    
     
     @IBAction func resetTotal(_ sender: Any) {
         total.text = "$0.00"
@@ -258,6 +266,10 @@ class MainScreen: UIViewController {
             return
         }
         userDefaultsShared?.setValue(text, forKey: "TEXT")
+        guard let textSecondary = secondary.text, !textSecondary.isEmpty else {
+            return
+        }
+        userDefaultsShared?.setValue(textSecondary, forKey: "SECONDARY")
         WidgetCenter.shared.reloadAllTimelines()
     }
     
