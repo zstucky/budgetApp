@@ -24,41 +24,46 @@ class MainScreen: UIViewController {
         //loads the amounts from last time the app was used
         total.text = UserDefaults.standard.string(forKey: "BALANCE") ?? "$0.00"
         secondary.text = UserDefaults.standard.string(forKey: "GIWINTG") ?? "$0.00"
-
+        
         //sets the color for the main total
-        let color = total.text!.split(separator: "$").last
-        let colorNum = Double(color!)!
-        if colorNum > 0
-        {
-            total.textColor = .green
-        }
-        else if colorNum < 0
-        {
-            total.textColor = .red
-        }
-        else
-        {
-            total.textColor = .white
+        if let color = total.text?.split(separator: "$").last {
+            if let colorNum = Double(color) {
+                if colorNum > 0
+                {
+                    total.textColor = .green
+                }
+                else if colorNum < 0
+                {
+                    total.textColor = .red
+                }
+                else
+                {
+                    total.textColor = .white
+                }
+            }
         }
         
         //sets the color for the secondary total
-        let colorSecondary = secondary.text!.split(separator: "$").last
-        let colorNumSecondary = Double(colorSecondary!)!
-        if colorNumSecondary > 0
-        {
-            secondary.textColor = .green
-        }
-        else if colorNumSecondary < 0
-        {
-            secondary.textColor = .red
-        }
-        else
-        {
-            secondary.textColor = .white
+        if let colorSecondary = secondary.text?.split(separator: "$").last {
+            if let colorNumSecondary = Double(colorSecondary) {
+                if colorNumSecondary > 0
+                {
+                    secondary.textColor = .green
+                }
+                else if colorNumSecondary < 0
+                {
+                    secondary.textColor = .red
+                }
+                else
+                {
+                    secondary.textColor = .white
+                }
+            }
         }
     }
     
     
+    //TO-DO: Address force unwrapping here
     @IBAction func addIncome(_ sender: Any) {
         //refund
         if specialSwitch.isOn {
@@ -182,6 +187,7 @@ class MainScreen: UIViewController {
         }
     }
     
+    //TO-DO: Address force unwrapping here
     @IBAction func subExpense(_ sender: Any) {
         //GIWINTG
         if specialSwitch.isOn {

@@ -82,19 +82,16 @@ extension LogView: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         let Transactions = self.logs![indexPath.row]
         cell.textLabel?.text = "$\(Transactions.amount ?? "") \(Transactions.note ?? "no note")"
-        if Transactions.type == "refund" {
+        switch Transactions.type {
+        case "refund":
             cell.textLabel?.textColor = .cyan
-        }
-        else if Transactions.type == "income" {
+        case "income":
             cell.textLabel?.textColor = .green
-        }
-        else if Transactions.type == "GIWINTG" {
+        case "GIWINTG":
             cell.textLabel?.textColor = .yellow
-        }
-        else if Transactions.type == "expense" {
+        case "expense":
             cell.textLabel?.textColor = .red
-        }
-        else {
+        default:
             cell.textLabel?.textColor = .gray
         }
 
