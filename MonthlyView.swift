@@ -1,34 +1,35 @@
 //
-//  LogView.swift
+//  MonthlyView.swift
 //  Budget
 //
-//  Created by Zach Stucky on 7/31/23.
+//  Created by Zach Stucky on 8/7/23.
 //
 
 import UIKit
 
-class LogView: UIViewController {
+class MonthlyView: UIViewController {
+
     
-    @IBOutlet weak var logList: UITableView!
-
+    @IBOutlet weak var monthlyTable: UITableView!
+    
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-
-    var logs:[Transactions]?
+    
+    var logsMonthly:[TransactionsMonthly]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        logList.delegate = self
-        logList.dataSource = self
+        monthlyTable.delegate = self
+        monthlyTable.dataSource = self
         fetchLogs()
     }
     
     //fetches all Transaction data
     func fetchLogs() {
         do {
-            self.logs = try context.fetch(Transactions.fetchRequest())
+            self.logsMonthly = try context.fetch(TransactionsMonthly.fetchRequest())
             DispatchQueue.main.async {
-                self.logList.reloadData()
+                self.monthlyTable.reloadData()
             }
         }
         catch {
@@ -36,19 +37,10 @@ class LogView: UIViewController {
         }
     }
     
-    //TO-DO: Add a warning pop-up for this
     @IBAction func deleteAllLogs(_ sender: Any) {
         //loops until all logs are deleted
-        while (logs!.count != 0) {
-            let logToRemove = self.logs![0]
-            
-            let newTransaction = TransactionsMonthly(context: self.context)
-            newTransaction.amount = logToRemove.amount
-            newTransaction.note = logToRemove.note
-            newTransaction.type = logToRemove.type
-            
-            try! self.context.save() //saves the log
-            
+        while (logsMonthly!.count != 0) {
+            let logToRemove = self.logsMonthly![0]
             self.context.delete(logToRemove)
             try! self.context.save()
             self.fetchLogs()
@@ -59,7 +51,7 @@ class LogView: UIViewController {
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let action = UIContextualAction(style: .destructive, title: "Delete") { (action, view, completionHandler) in
             
-            let logToRemove = self.logs![indexPath.row]
+            let logToRemove = self.logsMonthly![indexPath.row]
             
             self.context.delete(logToRemove)
             
@@ -72,23 +64,21 @@ class LogView: UIViewController {
         }
         return UISwipeActionsConfiguration (actions: [action])
     }
+
 }
 
-
-extension LogView: UITableViewDelegate {
+extension MonthlyView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
     }
 }
 
-extension LogView: UITableViewDataSource {
+extension MonthlyView: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return logs?.count ?? 0
+        return logsMonthly?.count ?? 0
     }
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        let Transactions = self.logs![indexPath.row]
+        let Transactions = self.logsMonthly![indexPath.row]
         cell.textLabel?.text = "$\(Transactions.amount ?? "") \(Transactions.note ?? "no note")"
         switch Transactions.type {
         case "refund":
